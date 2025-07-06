@@ -16,4 +16,4 @@ O aplicație simplă pentru a asculta posturi de **radio live** din România –
 
 ---
 
-Creat cu ❤️ de **Alecu Popa**
+Creat cu ❤️ de **Alecu20p**
