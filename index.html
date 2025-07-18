@@ -2,12 +2,12 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Radio Live Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radio Live – Italia & România</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: 'Arial', sans-serif;
       background-color: #121212;
       color: #fff;
       display: flex;
@@ -17,34 +17,60 @@
     }
 
     .wrapper {
+      text-align: center;
       background: #1e1e1e;
       padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
+      border-radius: 16px;
+      width: 95%;
+      max-width: 480px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     }
 
     h1 {
-      font-weight: 400;
       margin-bottom: 1em;
+    }
+
+    .flag-buttons {
+      margin-bottom: 1em;
+    }
+
+    .flag-buttons button {
+      font-size: 2.5em;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: transform 0.2s;
+    }
+
+    .flag-buttons button:hover {
+      transform: scale(1.2);
+    }
+
+    .antenna {
+      font-size: 2em;
+      margin: 0 10px;
     }
 
     select {
       width: 100%;
-      padding: 10px;
+      padding: 0.6em;
       border-radius: 8px;
-      border: none;
       font-size: 1em;
+      margin-bottom: 1em;
+    }
+
+    .controls-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 1em;
     }
 
     .controls {
       display: flex;
+      gap: 10px;
       justify-content: center;
-      gap: 0.5em;
-      flex-wrap: wrap;
     }
 
     .controls button {
@@ -54,7 +80,7 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      background: #03dac5;
+      background: #04a3e200;
       color: #000;
       font-weight: bold;
       transition: background 0.2s;
@@ -65,39 +91,47 @@
       justify-content: center;
     }
 
-    .controls button:hover {
-      background: #00bfa5;
+    .speaker {
+      font-size: 3em;
     }
 
-    audio {
-      margin-top: 1em;
+    .speaker.animated {
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+
+    #player {
       width: 100%;
+      margin-top: 1em;
     }
 
     #nowPlaying {
-      margin-top: 1.5em;
-      font-size: 2em;
-      font-weight: bold;
+      margin-top: 1em;
+      font-size: 1.2em;
       color: #03dac5;
+      font-weight: bold;
     }
 
     .equalizer {
+      margin: 20px auto 0;
+      width: 100%;
+      height: 30px;
       display: flex;
       justify-content: center;
-      align-items: end;
       gap: 4px;
-      margin-top: 1em;
-      height: 30px;
-      visibility: hidden;
     }
 
     .bar {
       width: 5px;
-      height: 100%;
       background: #03dac5;
-      animation: pulse 1s infinite;
-      border-radius: 2px;
-      transform-origin: bottom;
+    }
+
+    .bar.animated {
+      animation: bounce 1s infinite ease-in-out;
     }
 
     .bar:nth-child(1) { animation-delay: 0s; }
@@ -105,28 +139,47 @@
     .bar:nth-child(3) { animation-delay: 0.2s; }
     .bar:nth-child(4) { animation-delay: 0.3s; }
     .bar:nth-child(5) { animation-delay: 0.4s; }
+    .bar:nth-child(6) { animation-delay: 0.5s; }
+    .bar:nth-child(7) { animation-delay: 0.6s; }
+    .bar:nth-child(8) { animation-delay: 0.7s; }
 
-    @keyframes pulse {
-      0%   { transform: scaleY(0.3); }
-      50%  { transform: scaleY(1); }
-      100% { transform: scaleY(0.3); }
+    @keyframes bounce {
+      0%, 100% { height: 10px; }
+      50% { height: 30px; }
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <h1>🎧 Radio Live</h1>
+    <h1>🎧 Radio Live 📻</h1>
 
-    <select id="stations"></select>
+    <div class="flag-buttons">
+      <button onclick="showCountry('italia')">🇮🇹</button>
+      <span class="antenna">📡</span>
+      <button onclick="showCountry('romania')">🇷🇴</button>
+    </div>
 
-    <div class="controls">
-      <button onclick="prevStation()">⏮️</button>
-      <button onclick="playStation()">▶️</button>
-      <button onclick="stopStation()">⏹️</button>
-      <button onclick="nextStation()">⏭️</button>
+    <div id="selectItalia">
+      <select id="stationsItalia"></select>
+    </div>
+
+    <div id="selectRomania" style="display:none;">
+      <select id="stationsRomania"></select>
+    </div>
+
+    <div class="controls-container">
+      <span class="speaker" id="leftSpeaker">🔊</span>
+      <div class="controls">
+        <button onclick="prevStation()">⏮️</button>
+        <button onclick="playStation()">▶️</button>
+        <button onclick="stopStation()">⏹️</button>
+        <button onclick="nextStation()">⏭️</button>
+      </div>
+      <span class="speaker" id="rightSpeaker">🔊</span>
     </div>
 
     <audio id="player" controls></audio>
+    <div id="nowPlaying">Nimic redat</div>
 
     <div class="equalizer" id="equalizer">
       <div class="bar"></div>
@@ -134,13 +187,36 @@
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
     </div>
-
-    <div id="nowPlaying">Nimic redat</div>
   </div>
 
   <script>
-    const stations = [
+    const stationsItalia = [
+  { name: "Go FM Radio", url: "https://stream4.thepuremix.net/gofm.mp3?esPlayer&cb=835851.mp3" },
+  { name: "Kiss-Kiss", url: "http://ice07.fluidstream.net:8080/KissKiss.mp3" },
+  { name: "Kiss-Kiss Italia", url: "http://wma07.fluidstream.net:3616/stream.nsv" },
+  { name: "Latte Miele 91.2 FM", url: "https://sr15.inmystream.it/stream/lattemiele" },
+  { name: "Lolliradio Italia", url: "https://stream.lolliradio.net/lolli_italia.mp3" },
+  { name: "Marte", url: "http://onair18.xdevel.com:8212/" },
+  { name: "MC2 New Age", url: "https://edge.singsingmusic.net/mc2newage" },
+  { name: "R101-FM", url: "http://icecast.unitedradio.it:80/r101_mp3" },
+  { name: "Radio 105 FM", url: "http://icecast.unitedradio.it:80/Radio105.mp3" },
+  { name: "Radio 2.0", url: "http://vps.radioduepuntozero.it:80/stream.mp3?type=http&nocache=3184" },
+  { name: "Radio Ascoli", url: "http://ice09.fluidstream.net:80/fluid0909.mp3" },
+  { name: "Radio Like", url: "http://wma03.fluidstream.net:9070/" },
+  { name: "Radio Mela", url: "http://91.121.38.216:8036/" },
+  { name: "Radio Milano", url: "http://sh1.inmystream.info:8175/" },
+  { name: "RAI Radio 1", url: "http://icestreaming.rai.it:80/1.mp3" },
+  { name: "Rai Radio 2 Indie", url: "http://icestreaming.rai.it:80/15.mp3" },
+  { name: "RDS 100% Grandi Successi", url: "http://stream1.rds.it:8000/rdsmp3" },
+  { name: "RTL 102.5", url: "http:///rtl-1025" },
+  { name: "Venice Classic Radio Italia", url: "http://174.36.206.197:8000/" }
+    ];
+
+    const stationsRomania = [
     { name: "DanceFM 89.5 - 128 kbit/s", url: "http://edge126.rdsnet.ro:84/profm/dancefm.mp3" },
     { name: "Radio kiss FM - 128 kbit/s", url: "http://live.kissfm.ro/kissfm.aacp" },
     { name: "Radio zU - 128 kbit/s", url: "http://zuicast.digitalag.ro:9420/zu" },
@@ -245,47 +321,47 @@
     { name: "Radio Dreams Dance Hits Adrenaline - 128 kbit/s", url: "http://5.2.184.92:3390/stream/1/" },
     ];
 
-    let currentIndex = 0;
-
-    window.onload = () => {
-      const select = document.getElementById("stations");
-      stations.forEach((s, i) => {
+    function populateSelect(id, list) {
+      const sel = document.getElementById(id);
+      sel.innerHTML = "";
+      list.forEach(st => {
         const opt = document.createElement("option");
-        opt.value = s.url;
-        opt.text = s.name;
-        if (i === currentIndex) opt.selected = true;
-        select.appendChild(opt);
+        opt.text = st.name;
+        opt.value = st.url;
+        sel.appendChild(opt);
       });
-    };
+    }
 
-    function playStation() {
-      const sel = document.getElementById("stations");
+    function showCountry(country) {
+      document.getElementById("selectItalia").style.display = (country === 'italia') ? 'block' : 'none';
+      document.getElementById("selectRomania").style.display = (country === 'romania') ? 'block' : 'none';
+    }
+
+    function getVisibleSelectId() {
+      const selIT = document.getElementById("selectItalia");
+      return selIT.style.display !== "none" ? "stationsItalia" : "stationsRomania";
+    }
+
+    function toggleAnimation(active) {
+      document.getElementById("leftSpeaker").classList.toggle("animated", active);
+      document.getElementById("rightSpeaker").classList.toggle("animated", active);
+      document.querySelectorAll(".bar").forEach(bar => bar.classList.toggle("animated", active));
+    }
+
+    function playFrom(selectId) {
+      const sel = document.getElementById(selectId);
       const player = document.getElementById("player");
-      const np = document.getElementById("nowPlaying");
-      const vu = document.getElementById("equalizer");
+      const nowPlaying = document.getElementById("nowPlaying");
 
-      const station = sel.options[sel.selectedIndex];
-      if (!station || !station.value) {
-        np.textContent = "⛔️ Selectează o stație validă.";
-        vu.style.visibility = 'hidden';
-        return;
-      }
+      const url = sel.value;
+      const name = sel.options[sel.selectedIndex].text;
 
-      currentIndex = sel.selectedIndex;
-      player.pause();
-      player.removeAttribute('src');
-      player.load();
-      player.src = station.value;
-      player.load();
+      if (!url) return;
 
-      player.play().then(() => {
-        np.textContent = ` Acum redăm: ${station.text}`;
-        vu.style.visibility = 'visible';
-      }).catch(err => {
-        np.textContent = "⛔️ Nu s-a putut reda. Atinge din nou.";
-        vu.style.visibility = 'hidden';
-        console.error("Eroare redare:", err);
-      });
+      player.src = url;
+      player.play();
+      nowPlaying.textContent = `▶️ ACUM ASCULTI: ${name}`;
+      toggleAnimation(true);
     }
 
     function stopStation() {
@@ -293,20 +369,36 @@
       player.pause();
       player.currentTime = 0;
       document.getElementById("nowPlaying").textContent = "⏹️ Redare oprită";
-      document.getElementById("equalizer").style.visibility = 'hidden';
+      toggleAnimation(false);
+    }
+
+    function playStation() {
+      playFrom(getVisibleSelectId());
     }
 
     function prevStation() {
-      currentIndex = (currentIndex - 1 + stations.length) % stations.length;
-      document.getElementById("stations").selectedIndex = currentIndex;
-      playStation();
+      const id = getVisibleSelectId();
+      const sel = document.getElementById(id);
+      if (sel && sel.selectedIndex > 0) {
+        sel.selectedIndex--;
+        playFrom(id);
+      }
     }
 
     function nextStation() {
-      currentIndex = (currentIndex + 1) % stations.length;
-      document.getElementById("stations").selectedIndex = currentIndex;
-      playStation();
+      const id = getVisibleSelectId();
+      const sel = document.getElementById(id);
+      if (sel && sel.selectedIndex < sel.options.length - 1) {
+        sel.selectedIndex++;
+        playFrom(id);
+      }
     }
+
+    window.onload = () => {
+      populateSelect("stationsItalia", stationsItalia);
+      populateSelect("stationsRomania", stationsRomania);
+      showCountry("italia");
+    };
   </script>
 </body>
 </html>
