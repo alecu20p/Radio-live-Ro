@@ -227,7 +227,7 @@
 { name: "RMC2 Radio Monte Carlo 2", url: "http://edge.radiomontecarlo.net/MC2.mp3" },
 { name: "Radio m2o", url: "http://radiom2o-lh.akamaihd.net/i/RadioM2o_Live_1@42518/master.m3u8" },
 { name: "Radio 24", url: "http://shoutcast.radio24.it:8000/listen.pls" },
-{ name: "Radio LatteMiele", url: "http://onair18.xdevel.com:8014/" },
+{ name: "Radio LatteMiele", url: "http://sr15.inmystream.it/stream/lattemiele" },
 { name: "Radio Marte", url: "https://stream1.xdevel.com/audio0s975753-313/stream/icecast.audio" },
 { name: "Radio Ibiza", url: "http://wma02.fluidstream.net:5010/" },
 { name: "Discoradio", url: "http://46.37.20.206:1935/live/1discoradio.stream/playlist.m3u8" },
@@ -412,6 +412,15 @@
       document.getElementById("nowPlaying").textContent = getNowPlayingText(lang, name);
     }
 
+    function showStationError(lang) {
+      const msg = lang === "it"
+        ? "❌ Stazione non disponibile"
+        : "❌ Stația nu funcționează";
+      document.getElementById("nowPlaying").textContent = msg;
+      toggleAnimation(false);
+    }
+
+    // Modifica playFrom per gestire l'errore di caricamento:
     function playFrom(selectId) {
       const sel = document.getElementById(selectId);
       const player = document.getElementById("player");
@@ -423,7 +432,15 @@
       if (!url) return;
 
       player.src = url;
-      player.play();
+      player.play().catch(() => {
+        showStationError(lang);
+      });
+
+      // Gestione errore di streaming (ad es. server offline)
+      player.onerror = function () {
+        showStationError(lang);
+      };
+
       document.getElementById("nowPlaying").textContent = getNowPlayingText(lang, name);
       toggleAnimation(true);
     }
