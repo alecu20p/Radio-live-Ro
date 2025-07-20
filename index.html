@@ -180,7 +180,7 @@
 
     <audio id="player" controls></audio>
     <div id="nowPlaying">Nimic redat</div>
-
+    
     <div class="equalizer" id="equalizer">
       <div class="bar"></div>
       <div class="bar"></div>
@@ -195,7 +195,6 @@
 
   <script>
     const stationsItalia = [
-  { name: "Go FM Radio", url: "https://stream4.thepuremix.net/gofm.mp3?esPlayer&cb=835851.mp3" },
   { name: "Kiss-Kiss", url: "http://ice07.fluidstream.net:8080/KissKiss.mp3" },
   { name: "Kiss-Kiss Italia", url: "http://wma07.fluidstream.net:3616/stream.nsv" },
   { name: "Latte Miele 91.2 FM", url: "https://sr15.inmystream.it/stream/lattemiele" },
@@ -348,19 +347,42 @@
       document.querySelectorAll(".bar").forEach(bar => bar.classList.toggle("animated", active));
     }
 
+    function getLangBySelectId(selectId) {
+      // Return 'ro' pentru România, 'it' pentru Italia
+      return selectId === "stationsItalia" ? "it" : "ro";
+    }
+
+    function getNowPlayingText(lang, name) {
+      if (lang === "it") {
+        return name
+          ? `▶️ ORA STAI ASCOLTANDO: ${name}`
+          : "Nessuna riproduzione";
+      } else {
+        return name
+          ? `▶️ ACUM ASCULTI: ${name}`
+          : "Nimic redat";
+      }
+    }
+
+    function updateNowPlaying(name = "") {
+      const selectId = getVisibleSelectId();
+      const lang = getLangBySelectId(selectId);
+      document.getElementById("nowPlaying").textContent = getNowPlayingText(lang, name);
+    }
+
     function playFrom(selectId) {
       const sel = document.getElementById(selectId);
       const player = document.getElementById("player");
-      const nowPlaying = document.getElementById("nowPlaying");
 
       const url = sel.value;
       const name = sel.options[sel.selectedIndex].text;
+      const lang = getLangBySelectId(selectId);
 
       if (!url) return;
 
       player.src = url;
       player.play();
-      nowPlaying.textContent = `▶️ ACUM ASCULTI: ${name}`;
+      document.getElementById("nowPlaying").textContent = getNowPlayingText(lang, name);
       toggleAnimation(true);
     }
 
@@ -368,7 +390,7 @@
       const player = document.getElementById("player");
       player.pause();
       player.currentTime = 0;
-      document.getElementById("nowPlaying").textContent = "⏹️ Redare oprită";
+      updateNowPlaying(); // Actualizează textul la oprire
       toggleAnimation(false);
     }
 
@@ -398,6 +420,7 @@
       populateSelect("stationsItalia", stationsItalia);
       populateSelect("stationsRomania", stationsRomania);
       showCountry("italia");
+      updateNowPlaying(); // Setează textul inițial corect
     };
   </script>
 </body>
