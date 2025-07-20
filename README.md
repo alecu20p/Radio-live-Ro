@@ -1,19 +1,23 @@
-# radio-live-ro
-# 🎧 Radio Live România 🇷🇴
+🎧 Radio Live Italia & România 🇮🇹🇷🇴
 
-O aplicație simplă pentru a asculta posturi de **radio live** din România – direct din browser!
+O aplicație simplă și elegantă pentru a asculta posturi de radio live din România și Italia – direct din browser, fără reclame, fără complicații.
 
-## 🎵 Ce include
-- Zeci de posturi de radio populare (muzică, știri, manele, dance, etc.)
-- Interfață modernă, responsive, cu animație vizuală de tip VU-meter
+⸻
 
-## ✅ Compatibilitate
-- ✅ Android (Chrome, Firefox)
-- ✅ Windows & Mac (Chrome, Edge, Firefox)
-- ⚠️ *Safari pe iPhone are limitări* – unele posturi pot să nu funcționeze din cauza restricțiilor Apple legate de HTTP/CORS.
+🎵 Ce include
+	•	✅ Zeci de posturi populare: muzică, știri, dance, manele și altele
+	•	✅ Interfață modernă, adaptabilă (responsive), cu animație vizuală VU-meter
 
-> Pentru cea mai bună experiență, poți descărca fișierul `.html` și îl poți deschide local în browser.
+⸻
 
----
+💻 Compatibilitate
+	•	✅ Android (Chrome, Firefox)
+	•	✅ Windows & Mac (Chrome, Edge, Firefox)
+	•	⚠️ Safari pe iPhone are limitări – unele posturi pot să nu funcționeze din cauza restricțiilor Apple (HTTP/CORS)
+➕ Soluție recomandată: folosește aplicația gratuită HTML Viewer Q din App Store pentru a deschide fișierul .html direct pe iPhone
 
-Creat cu ❤️ de **Alecu20p**
+⸻
+
+🔽 Recomandare
+
+Pentru cea mai bună experiență, descarcă fișierul .html și deschide-l local în browserul tău preferat.
